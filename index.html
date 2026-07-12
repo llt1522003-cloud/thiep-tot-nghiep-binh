@@ -275,6 +275,9 @@
     cursor:pointer; transition:.2s;
   }
   .wish-suggestion:hover{ border-color:var(--red); color:var(--red-deep); background:#fff; }
+  .wish-suggestion[hidden]{ display:none; }
+  .wish-suggestions-empty{ display:none; margin:0 0 10px; color:var(--ink-soft); font-size:.82rem; }
+  .wish-suggestions-empty.show{ display:block; }
   .radio-group{ display:flex; gap:10px; }
   .radio-opt{
     flex:1; text-align:center; padding:12px; border-radius:12px;
@@ -444,10 +447,6 @@
         <input type="text" id="r-name" required placeholder="Tên của bạn">
       </div>
       <div class="field">
-        <label>Email</label>
-        <input type="email" id="r-email" required placeholder="ban@email.com">
-      </div>
-      <div class="field">
         <label>Bạn có thể đến dự không?</label>
         <div class="radio-group" id="r-attend">
           <div class="radio-opt active" data-val="Có">🎉 Chắc chắn rồi</div>
@@ -481,6 +480,7 @@
           <button type="button" class="wish-suggestion">Chúc Bình sớm tìm được công việc yêu thích và gặt hái thật nhiều thành công! 🌟</button>
           <button type="button" class="wish-suggestion">Một hành trình khép lại, hành trình mới bắt đầu. Chúc Bình luôn may mắn và tỏa sáng! 🎉</button>
         </div>
+        <p class="wish-suggestions-empty" id="wish-suggestions-empty">Các lời chúc mẫu đã được khách khác sử dụng hết. Bạn hãy viết một lời chúc riêng nhé 💌</p>
         <textarea id="w-msg" rows="3" required placeholder="Gửi vài lời chúc mừng tốt nghiệp nhé..."></textarea>
       </div>
       <div class="field">
@@ -679,18 +679,39 @@ function renderWall(){
   }).join('');
 }
 
-function loadWishesFromSheet(){
-  if(!CONFIG.APPS_SCRIPT_URL) return;
-  fetch(CONFIG.APPS_SCRIPT_URL + '?action=list')
+function normalizeWish(value){
+  return String(value||'').trim().replace(/\s+/g,' ').toLocaleLowerCase('vi');
+}
+
+function updateWishSuggestions(){
+  const used = new Set(wishes.map(w=>normalizeWish(w.message)));
+  let available = 0;
+  document.querySelectorAll('.wish-suggestion').forEach(btn=>{
+    btn.hidden = used.has(normalizeWish(btn.textContent));
+    if(!btn.hidden) available++;
+  });
+  document.getElementById('wish-suggestions-empty').classList.toggle('show', available===0);
+}
+
+function fetchWishesFromSheet(){
+  if(!CONFIG.APPS_SCRIPT_URL) return Promise.resolve(wishes);
+  return fetch(CONFIG.APPS_SCRIPT_URL + '?action=list&_=' + Date.now(), {cache:'no-store'})
     .then(r=>r.json())
     .then(data=>{
       if(Array.isArray(data)){
         wishes = data.map(d=>({name:d.name, message:d.message, photo:d.photo||null}));
         renderWall();
-        // fly the most recent 3 wishes in as part of the opening show
-        wishes.slice(-3).forEach((w,i)=> setTimeout(()=>spawnFlyingWish(w.name,w.message), 900+i*1200));
+        updateWishSuggestions();
       }
-    }).catch(()=>{});
+      return wishes;
+    }).catch(()=>wishes);
+}
+
+function loadWishesFromSheet(){
+  fetchWishesFromSheet().then(()=>{
+    // fly the most recent 3 wishes in as part of the opening show
+    wishes.slice(-3).forEach((w,i)=> setTimeout(()=>spawnFlyingWish(w.name,w.message), 900+i*1200));
+  });
 }
 
 function sendToSheet(type, payload){
@@ -715,7 +736,6 @@ document.getElementById('rsvp-form').addEventListener('submit', async (e)=>{
   btn.disabled = true; btn.textContent = 'Đang gửi...';
   const payload = {
     name: document.getElementById('r-name').value,
-    email: document.getElementById('r-email').value,
     attending: attendVal,
     time: new Date().toISOString()
   };
@@ -760,12 +780,17 @@ fileInput.addEventListener('change', ()=>{
   reader.readAsDataURL(f);
 });
 
+let selectedSuggestion = '';
 document.querySelectorAll('.wish-suggestion').forEach(btn=>{
   btn.addEventListener('click', ()=>{
     const message = document.getElementById('w-msg');
-    message.value = btn.textContent.trim();
+    selectedSuggestion = btn.textContent.trim();
+    message.value = selectedSuggestion;
     message.focus();
   });
+});
+document.getElementById('w-msg').addEventListener('input', (e)=>{
+  if(normalizeWish(e.target.value)!==normalizeWish(selectedSuggestion)) selectedSuggestion = '';
 });
 
 document.getElementById('wish-form').addEventListener('submit', async (e)=>{
@@ -775,10 +800,24 @@ document.getElementById('wish-form').addEventListener('submit', async (e)=>{
   btn.disabled = true; btn.textContent = 'Đang gửi...';
   const name = document.getElementById('w-name').value;
   const message = document.getElementById('w-msg').value;
+  if(selectedSuggestion){
+    await fetchWishesFromSheet();
+    const alreadyUsed = wishes.some(w=>normalizeWish(w.message)===normalizeWish(selectedSuggestion));
+    if(alreadyUsed){
+      btn.disabled = false; btn.textContent = 'Gửi lời chúc';
+      toast.className = 'toast show err';
+      toast.textContent = 'Câu chúc này vừa được một khách khác sử dụng. Bạn vui lòng chọn câu gợi ý còn lại nhé.';
+      document.getElementById('w-msg').value = '';
+      selectedSuggestion = '';
+      updateWishSuggestions();
+      return;
+    }
+  }
   const payload = { name, message, photo: wishPhotoData||'', time:new Date().toISOString() };
   const res = await sendToSheet('wish', payload);
   wishes.push({name, message, photo:wishPhotoData});
   renderWall();
+  updateWishSuggestions();
   spawnFlyingWish(name, message);
   btn.disabled = false; btn.textContent = 'Gửi lời chúc';
   toast.className = 'toast show';
@@ -789,6 +828,7 @@ document.getElementById('wish-form').addEventListener('submit', async (e)=>{
     toast.textContent = 'Cảm ơn lời chúc dễ thương của bạn! 💐';
   }
   e.target.reset();
+  selectedSuggestion = '';
   wishPhotoData = null;
   fileLabel.textContent = 'Chọn ảnh để đính kèm';
   fileLabel.classList.remove('has-file');
