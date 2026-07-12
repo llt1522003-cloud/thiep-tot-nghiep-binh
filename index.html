@@ -373,14 +373,14 @@
 <!-- ================= HERO ================= -->
 <section class="hero" style="padding-top:0;min-height:100svh;max-width:none;">
   <div class="school-logos"><img class="logo-mark logo-haui" src="assets/haui-logo-transparent.png" alt="Đại học Công nghiệp Hà Nội"></div>
-  <div class="school-name">Trường Ngoại ngữ – Du lịch, Đại học Công nghiệp Hà Nội</div>
-  <div class="eyebrow">Thư mời tham dự</div>
-  <h1 class="display" style="font-size:clamp(1.4rem,4vw,1.9rem); color:var(--ink);">Lễ Tốt Nghiệp</h1>
+  <div class="school-name">Trường Ngoại ngữ – Du lịch, Đại học Công nghiệp Hà Nội<br>外语与旅游学院 · 河内工业大学</div>
+  <div class="eyebrow">Thư mời tham dự · 毕业典礼邀请函</div>
+  <h1 class="display" style="font-size:clamp(1.4rem,4vw,1.9rem); color:var(--ink);">Lễ Tốt Nghiệp · 毕业典礼</h1>
 
   <h2 class="grad-name display">Nguyễn Thị Bình</h2>
-  <div class="grad-major">Tân Cử nhân năm <span>2026</span></div>
+  <div class="grad-major">Tân Cử nhân Ngôn ngữ Trung Quốc · 汉语言专业学士 · <span>2026</span></div>
   <p class="invite-line">Sau bao nỗ lực, ngày vui ấy đã đến rồi. Mình trân trọng kính mời bạn đến chung vui,
-    cùng lưu giữ khoảnh khắc đáng nhớ này trong hành trình mới của mình.</p>
+    cùng lưu giữ khoảnh khắc đáng nhớ này trong hành trình mới của mình.<br><strong>诚挚邀请您共同见证这一重要时刻。</strong></p>
 
   <a href="#chi-tiet" class="scroll-cta">Xem chi tiết buổi lễ
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 4v16m0 0l-6-6m6 6l6-6"/></svg>
@@ -390,7 +390,7 @@
 <!-- ================= CHI TIẾT / TICKET ================= -->
 <section id="chi-tiet">
   <div class="section-head reveal">
-    <div class="eyebrow">Thông tin buổi lễ</div>
+    <div class="eyebrow">Thông tin buổi lễ · 毕业典礼信息</div>
     <h2>Vé mời tham dự</h2>
   </div>
 
@@ -474,12 +474,7 @@
       </div>
       <div class="field">
         <label>Lời chúc</label>
-        <div class="wish-suggestions" aria-label="Lời chúc gợi ý">
-          <button type="button" class="wish-suggestion">Chúc Bình tốt nghiệp rực rỡ và thành công trên chặng đường phía trước! 🎓✨</button>
-          <button type="button" class="wish-suggestion">Chúc mừng tân cử nhân! Mong Bình luôn tự tin, hạnh phúc và đạt mọi ước mơ. 💐</button>
-          <button type="button" class="wish-suggestion">Chúc Bình sớm tìm được công việc yêu thích và gặt hái thật nhiều thành công! 🌟</button>
-          <button type="button" class="wish-suggestion">Một hành trình khép lại, hành trình mới bắt đầu. Chúc Bình luôn may mắn và tỏa sáng! 🎉</button>
-        </div>
+        <div class="wish-suggestions" id="wish-suggestions" aria-label="Lời chúc gợi ý"></div>
         <p class="wish-suggestions-empty" id="wish-suggestions-empty">Các lời chúc mẫu đã được khách khác sử dụng hết. Bạn hãy viết một lời chúc riêng nhé 💌</p>
         <textarea id="w-msg" rows="3" required placeholder="Gửi vài lời chúc mừng tốt nghiệp nhé..."></textarea>
       </div>
@@ -500,8 +495,8 @@
 
 <footer class="reveal">
   <div class="school-logos"><img class="logo-mark logo-haui" src="assets/haui-logo-transparent.png" alt="Đại học Công nghiệp Hà Nội"></div>
-  <div>Được tạo với <span class="heart">♥</span> nhân dịp tốt nghiệp — Nguyễn Thị Bình, Tân Cử nhân 2026</div>
-  <div>Trường Ngoại ngữ – Du lịch, Đại học Công nghiệp Hà Nội · 2026</div>
+  <div>Được tạo với <span class="heart">♥</span> nhân dịp tốt nghiệp — Nguyễn Thị Bình, Tân Cử nhân Ngôn ngữ Trung Quốc 2026</div>
+  <div>Trường Ngoại ngữ – Du lịch, Đại học Công nghiệp Hà Nội · 汉语言专业 · 2026</div>
 </footer>
 
 <button id="music-toggle" aria-label="Bật/tắt nhạc nền">
@@ -664,6 +659,28 @@ function escapeHtml(s){ return (s||'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':
 
 /* ---------------- wishes wall data ---------------- */
 let wishes = [];
+const WISH_SUGGESTION_POOL = [
+  'Chúc Bình tốt nghiệp rực rỡ và thành công trên chặng đường phía trước! 🎓✨',
+  'Chúc mừng tân cử nhân! Mong Bình luôn tự tin, hạnh phúc và đạt mọi ước mơ. 💐',
+  'Chúc Bình sớm tìm được công việc yêu thích và gặt hái thật nhiều thành công! 🌟',
+  'Một hành trình khép lại, hành trình mới bắt đầu. Chúc Bình luôn may mắn và tỏa sáng! 🎉',
+  'Chúc Bình mang vốn tiếng Trung đi thật xa và mở ra thật nhiều cơ hội mới! 🇨🇳📚',
+  'Mong tấm bằng hôm nay là chiếc chìa khóa mở ra những cánh cửa tuyệt vời cho Bình. 🔑✨',
+  'Chúc Bình vững bước, giữ trọn đam mê và luôn thành công với lựa chọn của mình! 🌷',
+  'Tự hào về chặng đường Bình đã đi qua. Chúc hành trình phía trước luôn rực rỡ! ❤️',
+  '毕业快乐！祝你前程似锦，梦想成真！🎓',
+  '愿你以梦为马，不负韶华，未来一路繁花！🌸',
+  'Chúc tân cử nhân luôn giữ nụ cười, lòng nhiệt huyết và tinh thần không ngừng học hỏi! 😊',
+  'Mong Bình gặp thật nhiều người tốt, cơ hội tốt và những trải nghiệm đáng nhớ trên đường đời. 🍀',
+  'Chúc Bình biến mọi kiến thức đã học thành những thành tựu thật đáng tự hào! 🏆',
+  'Ngày tốt nghiệp thật đẹp, tương lai còn đẹp hơn. Chúc Bình luôn hạnh phúc và thành công! 💫',
+  'Chúc Bình tự tin dùng tiếng Trung kết nối thế giới và chinh phục mọi mục tiêu! 🌏',
+  '恭喜毕业！愿你的未来充满阳光、希望与成功！☀️',
+  'Mong những cố gắng của Bình hôm nay sẽ nở hoa thành một tương lai thật viên mãn. 🌼',
+  'Chúc Bình bước vào đời với bản lĩnh, sự tử tế và thật nhiều may mắn! 💖',
+  'Tốt nghiệp là điểm khởi đầu mới. Chúc Bình đi đâu cũng được yêu thương và trân trọng! 🎈',
+  '祝你毕业快乐，工作顺利，每一天都充满喜悦！🥳'
+];
 function renderWall(){
   const wall = document.getElementById('wish-wall');
   if(wishes.length===0){
@@ -685,12 +702,17 @@ function normalizeWish(value){
 
 function updateWishSuggestions(){
   const used = new Set(wishes.map(w=>normalizeWish(w.message)));
-  let available = 0;
-  document.querySelectorAll('.wish-suggestion').forEach(btn=>{
-    btn.hidden = used.has(normalizeWish(btn.textContent));
-    if(!btn.hidden) available++;
+  const available = WISH_SUGGESTION_POOL.filter(message=>!used.has(normalizeWish(message))).slice(0,4);
+  const container = document.getElementById('wish-suggestions');
+  container.innerHTML = '';
+  available.forEach(message=>{
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'wish-suggestion';
+    button.textContent = message;
+    container.appendChild(button);
   });
-  document.getElementById('wish-suggestions-empty').classList.toggle('show', available===0);
+  document.getElementById('wish-suggestions-empty').classList.toggle('show', available.length===0);
 }
 
 function fetchWishesFromSheet(){
@@ -781,13 +803,13 @@ fileInput.addEventListener('change', ()=>{
 });
 
 let selectedSuggestion = '';
-document.querySelectorAll('.wish-suggestion').forEach(btn=>{
-  btn.addEventListener('click', ()=>{
-    const message = document.getElementById('w-msg');
-    selectedSuggestion = btn.textContent.trim();
-    message.value = selectedSuggestion;
-    message.focus();
-  });
+document.getElementById('wish-suggestions').addEventListener('click', (e)=>{
+  const btn = e.target.closest('.wish-suggestion');
+  if(!btn) return;
+  const message = document.getElementById('w-msg');
+  selectedSuggestion = btn.textContent.trim();
+  message.value = selectedSuggestion;
+  message.focus();
 });
 document.getElementById('w-msg').addEventListener('input', (e)=>{
   if(normalizeWish(e.target.value)!==normalizeWish(selectedSuggestion)) selectedSuggestion = '';
@@ -837,6 +859,7 @@ document.getElementById('wish-form').addEventListener('submit', async (e)=>{
 /* ---------------- init ---------------- */
 window.addEventListener('load', ()=>{
   launchOpeningShow();
+  updateWishSuggestions();
   loadWishesFromSheet();
   renderWall();
 });
