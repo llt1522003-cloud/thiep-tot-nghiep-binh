@@ -268,6 +268,13 @@
     outline:none; transition:border-color .2s;
   }
   .field input:focus, .field textarea:focus{ border-color:var(--red); }
+  .wish-suggestions{ display:flex; flex-wrap:wrap; gap:8px; margin:0 0 10px; }
+  .wish-suggestion{
+    padding:8px 11px; border:1px solid #ecdccf; border-radius:999px;
+    background:#fff8f2; color:var(--ink-soft); font-family:inherit; font-size:.78rem;
+    cursor:pointer; transition:.2s;
+  }
+  .wish-suggestion:hover{ border-color:var(--red); color:var(--red-deep); background:#fff; }
   .radio-group{ display:flex; gap:10px; }
   .radio-opt{
     flex:1; text-align:center; padding:12px; border-radius:12px;
@@ -437,10 +444,6 @@
         <input type="text" id="r-name" required placeholder="Tên của bạn">
       </div>
       <div class="field">
-        <label>Số điện thoại</label>
-        <input type="tel" id="r-phone" required placeholder="09xx xxx xxx">
-      </div>
-      <div class="field">
         <label>Email</label>
         <input type="email" id="r-email" required placeholder="ban@email.com">
       </div>
@@ -472,6 +475,12 @@
       </div>
       <div class="field">
         <label>Lời chúc</label>
+        <div class="wish-suggestions" aria-label="Lời chúc gợi ý">
+          <button type="button" class="wish-suggestion">Chúc Bình tốt nghiệp rực rỡ và thành công trên chặng đường phía trước! 🎓✨</button>
+          <button type="button" class="wish-suggestion">Chúc mừng tân cử nhân! Mong Bình luôn tự tin, hạnh phúc và đạt mọi ước mơ. 💐</button>
+          <button type="button" class="wish-suggestion">Chúc Bình sớm tìm được công việc yêu thích và gặt hái thật nhiều thành công! 🌟</button>
+          <button type="button" class="wish-suggestion">Một hành trình khép lại, hành trình mới bắt đầu. Chúc Bình luôn may mắn và tỏa sáng! 🎉</button>
+        </div>
         <textarea id="w-msg" rows="3" required placeholder="Gửi vài lời chúc mừng tốt nghiệp nhé..."></textarea>
       </div>
       <div class="field">
@@ -706,7 +715,6 @@ document.getElementById('rsvp-form').addEventListener('submit', async (e)=>{
   btn.disabled = true; btn.textContent = 'Đang gửi...';
   const payload = {
     name: document.getElementById('r-name').value,
-    phone: document.getElementById('r-phone').value,
     email: document.getElementById('r-email').value,
     attending: attendVal,
     time: new Date().toISOString()
@@ -750,6 +758,14 @@ fileInput.addEventListener('change', ()=>{
     img.src = reader.result;
   };
   reader.readAsDataURL(f);
+});
+
+document.querySelectorAll('.wish-suggestion').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    const message = document.getElementById('w-msg');
+    message.value = btn.textContent.trim();
+    message.focus();
+  });
 });
 
 document.getElementById('wish-form').addEventListener('submit', async (e)=>{
