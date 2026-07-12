@@ -373,14 +373,14 @@
 <!-- ================= HERO ================= -->
 <section class="hero" style="padding-top:0;min-height:100svh;max-width:none;">
   <div class="school-logos"><img class="logo-mark logo-haui" src="assets/haui-logo-transparent.png" alt="Đại học Công nghiệp Hà Nội"></div>
-  <div class="school-name">Trường Ngoại ngữ – Du lịch, Đại học Công nghiệp Hà Nội<br>外语与旅游学院 · 河内工业大学</div>
-  <div class="eyebrow">Thư mời tham dự · 毕业典礼邀请函</div>
-  <h1 class="display" style="font-size:clamp(1.4rem,4vw,1.9rem); color:var(--ink);">Lễ Tốt Nghiệp · 毕业典礼</h1>
+  <div class="school-name">Trường Ngoại ngữ – Du lịch, Đại học Công nghiệp Hà Nội</div>
+  <div class="eyebrow">Thư mời tham dự</div>
+  <h1 class="display" style="font-size:clamp(1.4rem,4vw,1.9rem); color:var(--ink);">Lễ Tốt Nghiệp</h1>
 
   <h2 class="grad-name display">Nguyễn Thị Bình</h2>
-  <div class="grad-major">Tân Cử nhân Ngôn ngữ Trung Quốc · 汉语言专业学士 · <span>2026</span></div>
+  <div class="grad-major">Tân Cử nhân năm <span>2026</span></div>
   <p class="invite-line">Sau bao nỗ lực, ngày vui ấy đã đến rồi. Mình trân trọng kính mời bạn đến chung vui,
-    cùng lưu giữ khoảnh khắc đáng nhớ này trong hành trình mới của mình.<br><strong>诚挚邀请您共同见证这一重要时刻。</strong></p>
+    cùng lưu giữ khoảnh khắc đáng nhớ này trong hành trình mới của mình.</p>
 
   <a href="#chi-tiet" class="scroll-cta">Xem chi tiết buổi lễ
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 4v16m0 0l-6-6m6 6l6-6"/></svg>
@@ -437,7 +437,7 @@
 <!-- ================= RSVP ================= -->
 <section id="xac-nhan">
   <div class="section-head reveal">
-    <div class="eyebrow">Rất mong được gặp bạn</div>
+    <div class="eyebrow">Rất mong được gặp bạn · 期待与您相见</div>
     <h2>Xác nhận tham dự</h2>
   </div>
   <div class="card reveal">
@@ -463,7 +463,7 @@
 <!-- ================= WISHES ================= -->
 <section id="loi-chuc">
   <div class="section-head reveal">
-    <div class="eyebrow">Góc lưu bút</div>
+    <div class="eyebrow">Góc lưu bút · 留言祝福</div>
     <h2>Gửi lời chúc đến Bình</h2>
   </div>
   <div class="card reveal">
@@ -659,7 +659,7 @@ function escapeHtml(s){ return (s||'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':
 
 /* ---------------- wishes wall data ---------------- */
 let wishes = [];
-const WISH_SUGGESTION_POOL = [
+const VIETNAMESE_WISHES = [
   'Chúc Bình tốt nghiệp rực rỡ và thành công trên chặng đường phía trước! 🎓✨',
   'Chúc mừng tân cử nhân! Mong Bình luôn tự tin, hạnh phúc và đạt mọi ước mơ. 💐',
   'Chúc Bình sớm tìm được công việc yêu thích và gặt hái thật nhiều thành công! 🌟',
@@ -668,18 +668,32 @@ const WISH_SUGGESTION_POOL = [
   'Mong tấm bằng hôm nay là chiếc chìa khóa mở ra những cánh cửa tuyệt vời cho Bình. 🔑✨',
   'Chúc Bình vững bước, giữ trọn đam mê và luôn thành công với lựa chọn của mình! 🌷',
   'Tự hào về chặng đường Bình đã đi qua. Chúc hành trình phía trước luôn rực rỡ! ❤️',
-  '毕业快乐！祝你前程似锦，梦想成真！🎓',
-  '愿你以梦为马，不负韶华，未来一路繁花！🌸',
   'Chúc tân cử nhân luôn giữ nụ cười, lòng nhiệt huyết và tinh thần không ngừng học hỏi! 😊',
   'Mong Bình gặp thật nhiều người tốt, cơ hội tốt và những trải nghiệm đáng nhớ trên đường đời. 🍀',
   'Chúc Bình biến mọi kiến thức đã học thành những thành tựu thật đáng tự hào! 🏆',
   'Ngày tốt nghiệp thật đẹp, tương lai còn đẹp hơn. Chúc Bình luôn hạnh phúc và thành công! 💫',
   'Chúc Bình tự tin dùng tiếng Trung kết nối thế giới và chinh phục mọi mục tiêu! 🌏',
-  '恭喜毕业！愿你的未来充满阳光、希望与成功！☀️',
   'Mong những cố gắng của Bình hôm nay sẽ nở hoa thành một tương lai thật viên mãn. 🌼',
   'Chúc Bình bước vào đời với bản lĩnh, sự tử tế và thật nhiều may mắn! 💖',
-  'Tốt nghiệp là điểm khởi đầu mới. Chúc Bình đi đâu cũng được yêu thương và trân trọng! 🎈',
-  '祝你毕业快乐，工作顺利，每一天都充满喜悦！🥳'
+  'Tốt nghiệp là điểm khởi đầu mới. Chúc Bình đi đâu cũng được yêu thương và trân trọng! 🎈'
+];
+const CHINESE_WISHES = [
+  '毕业快乐！祝你前程似锦，梦想成真！🎓',
+  '愿你以梦为马，不负韶华，未来一路繁花！🌸',
+  '恭喜毕业！愿你的未来充满阳光、希望与成功！☀️',
+  '祝你毕业快乐，工作顺利，每一天都充满喜悦！🥳',
+  '愿你带着勇气和热爱，奔赴更加美好的未来！✨',
+  '祝你学有所成，事业有成，未来一切顺利！🌟',
+  '愿今天的毕业证书，成为你人生新篇章的起点！📜',
+  '祝你在未来的道路上自信坚定，闪闪发光！💫',
+  '愿你的努力都有收获，所有的梦想都能实现！🌷',
+  '恭喜你完成学业，愿未来的每一步都充满惊喜！🎉',
+  '祝你前途无量，平安喜乐，遇见更好的自己！🍀',
+  '愿你用中文连接世界，开启无限精彩的人生！🌏',
+  '愿毕业后的每一天，都比昨天更加接近梦想！🌈',
+  '祝你保持热爱，勇敢前行，收获属于自己的成功！🏆',
+  '愿你眼里有光，心中有梦，脚下有远方！🛤️',
+  '恭喜成为优秀的毕业生，祝你未来一路顺风！🎊'
 ];
 function renderWall(){
   const wall = document.getElementById('wish-wall');
@@ -702,7 +716,9 @@ function normalizeWish(value){
 
 function updateWishSuggestions(){
   const used = new Set(wishes.map(w=>normalizeWish(w.message)));
-  const available = WISH_SUGGESTION_POOL.filter(message=>!used.has(normalizeWish(message))).slice(0,4);
+  const vietnamese = VIETNAMESE_WISHES.filter(message=>!used.has(normalizeWish(message))).slice(0,2);
+  const chinese = CHINESE_WISHES.filter(message=>!used.has(normalizeWish(message))).slice(0,2);
+  const available = [...vietnamese, ...chinese];
   const container = document.getElementById('wish-suggestions');
   container.innerHTML = '';
   available.forEach(message=>{
