@@ -328,7 +328,6 @@
     background:var(--red); box-shadow:0 3px 6px rgba(0,0,0,.3);
   }
   .pin-card .msg{ font-size:.88rem; color:var(--ink); line-height:1.5; }
-  .pin-card .who{ margin-top:10px; font-size:.78rem; font-weight:700; color:var(--red-deep); }
   .pin-card img{ width:100%; border-radius:8px; margin-bottom:10px; display:block; }
   .wall-empty{ text-align:center; color:var(--ink-soft); font-size:.9rem; grid-column:1/-1; padding:20px 0; }
 
@@ -639,10 +638,10 @@ function launchOpeningShow(){
 
 /* ---------------- flying wish bubbles on open ---------------- */
 const flyLayer = document.getElementById('wish-fly-layer');
-function spawnFlyingWish(name, msg){
+function spawnFlyingWish(msg){
   const el = document.createElement('div');
   el.className = 'flying-wish';
-  el.innerHTML = '<b>'+escapeHtml(name)+'</b>'+escapeHtml(msg);
+  el.textContent = msg;
   const left = 8 + Math.random()*74;
   el.style.left = left+'vw';
   flyLayer.appendChild(el);
@@ -705,8 +704,7 @@ function renderWall(){
     const tilt = ((i%5)-2)*1.4;
     return '<div class="pin-card" style="--tilt:'+tilt+'deg">'+
       (w.photo ? '<img src="'+w.photo+'" alt="">' : '') +
-      '<div class="msg">'+escapeHtml(w.message)+'</div>'+
-      '<div class="who">— '+escapeHtml(w.name)+'</div></div>';
+      '<div class="msg">'+escapeHtml(w.message)+'</div></div>';
   }).join('');
 }
 
@@ -748,7 +746,7 @@ function fetchWishesFromSheet(){
 function loadWishesFromSheet(){
   fetchWishesFromSheet().then(()=>{
     // fly the most recent 3 wishes in as part of the opening show
-    wishes.slice(-3).forEach((w,i)=> setTimeout(()=>spawnFlyingWish(w.name,w.message), 900+i*1200));
+    wishes.slice(-3).forEach((w,i)=> setTimeout(()=>spawnFlyingWish(w.message), 900+i*1200));
   });
 }
 
@@ -856,7 +854,7 @@ document.getElementById('wish-form').addEventListener('submit', async (e)=>{
   wishes.push({name, message, photo:wishPhotoData});
   renderWall();
   updateWishSuggestions();
-  spawnFlyingWish(name, message);
+  spawnFlyingWish(message);
   btn.disabled = false; btn.textContent = 'Gửi lời chúc';
   toast.className = 'toast show';
   if(res.offline){
